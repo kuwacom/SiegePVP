@@ -8,7 +8,8 @@ MultiPaper対応の攻城戦PVP Minecraftプラグイン
 
 ## 概要
 
-SiegePVPは、Minecraft 1.20.1向けの攻城戦PVPプラグインです。MultiPaperに対応しており、複数のサーバーで動作する大規模攻城戦イベントを実現できます
+SiegePVPは、Minecraft 1.20.1向けの攻城戦PVPプラグインです  
+MultiPaperに対応しており、複数のサーバーで動作する大規模攻城戦イベントを実現できます
 
 ## 対応バージョン
 
