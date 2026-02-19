@@ -1,0 +1,6 @@
+name: SiegePVP
+version: '1.0.0'
+main: dev.kuwa.siegePVP.SiegePVP
+api-version: '1.20'
+authors: [ kuwa ]
+description: MultiPaper対応 攻城戦PVP Plugin
