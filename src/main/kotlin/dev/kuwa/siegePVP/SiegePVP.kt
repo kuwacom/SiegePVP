@@ -56,8 +56,7 @@ class SiegePVP : JavaPlugin() {
     }
 
     private fun registerListeners() {
-        // イベント登録（複数サーバー対応）
-        server.pluginManager.registerEvents(PlayerListener(), this)
+//        server.pluginManager.registerEvents(PlayerListener(), this)
         server.pluginManager.registerEvents(PlayerDeathListener(this ,gameManager, playerManager), this)
         server.pluginManager.registerEvents(PlayerJoin(this ,gameManager, teamManager, playerManager), this)
     }
