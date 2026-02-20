@@ -33,7 +33,7 @@ class GameManager(
             if (state == GameState.RUNNING) stopGame()
         }
     }
-    val playerScoreboardUpdater = PlayerScoreboardUpdater(plugin, teamManager, playerManager, timer)
+    val playerScoreboardUpdater = PlayerScoreboardUpdater(plugin, this, teamManager, playerManager, timer)
     var countdownTask: BukkitTask? = null
 
     init {
