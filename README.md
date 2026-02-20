@@ -105,6 +105,9 @@ bash
 
 ## 使用方法
 
+ゲーム以外のプレイヤーのゲームモードはアドベンチャーを前提とする  
+`/gamemode survival @a`
+
 ### ゲーム開始
 
 1. `/dev tag add <palyer> boss` 初めにボスを指定(チームに対して割り切れる数になるよう)
@@ -112,10 +115,8 @@ bash
 3. `/pvp team allocate` チーム割り振り
 
 > ここからは各試合ごとに  
-4. `/spawnpoint @a[team=red] ~ ~ ~` `/spawnpoint @a[team=blue] ~ ~ ~` でリス地固定
-5. `/tp @a[team=red] ~ ~ ~` `/tp @a[team=blue] ~ ~ ~` で各自を所定値に飛ばす
-6. `/pvp start` 開始 5秒カウントダウン始まる
-7. `/gamemode survival @a` 事前にアドベンチャーにして先にスタートさせないようにしておく
+4. `/pvp team tp <teamName>` でtpとリス地固定
+5. `/pvp start` 開始 5秒カウントダウン始まる
 
 ### チーム参加
 

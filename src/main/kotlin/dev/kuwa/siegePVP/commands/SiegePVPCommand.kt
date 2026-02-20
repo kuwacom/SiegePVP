@@ -87,6 +87,30 @@ class SiegePVPCommand(
         player.sendMessage("${plugin.PREFIX} §e全てのプレイヤーをteamに割り振りました！")
     }
 
+
+    /**
+     * 各チームの初期tpとリス地設定
+     */
+    @Subcommand("team tp")
+    @Syntax("<teamName>")
+    fun onTeamTP(
+        player: Player,
+        @Name("teamName") teamName: String
+    ) {
+        val location = player.location
+
+        val scoreboard = Bukkit.getScoreboardManager().mainScoreboard
+        val team = scoreboard.getTeam(teamName) ?: return
+
+        for (entry in team.entries) {
+            val targetPlayer = Bukkit.getPlayerExact(entry) ?: continue
+            targetPlayer.teleport(location)
+            targetPlayer.setBedSpawnLocation(location, true)
+        }
+
+        player.sendMessage("${plugin.PREFIX} §aチーム §r$teamName §aを現在地へtpしスポーン地点を設定しました！")
+    }
+
 //    @Subcommand("side on")
 //    fun onSideOn(player: Player) {
 //        gameManager.playerScoreboardUpdater.start()
