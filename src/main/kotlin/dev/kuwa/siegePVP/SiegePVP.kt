@@ -22,7 +22,7 @@ class SiegePVP : JavaPlugin() {
     lateinit var playerManager: PlayerManager
     lateinit var gameManager: GameManager
 
-    val PREFIX = "§8[§bSiegePVP§8]§r "
+    val PREFIX = "§8[§bSiegePVP§8]§r"
 
     override fun onEnable() {
         // Plugin startup logic
