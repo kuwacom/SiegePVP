@@ -23,7 +23,8 @@ class PlayerJoin(
         // ゲーム中のみ実行
         gameManager.getState()?.thenAcceptAsync( { state ->
             // adminの場合、ゲームに参加しないようにする
-            if (state == GameState.RUNNING && !player.scoreboardTags.contains("admin")) {
+            if (state == GameState.RUNNING &&
+                !player.scoreboardTags.contains("admin")) {
                 if (player.scoreboardTags.contains("boss")) {
                     // ボスプレイヤー用処理
                 } else {
