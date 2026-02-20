@@ -12,7 +12,9 @@ import net.kyori.adventure.title.Title.Times
 import net.kyori.adventure.title.Title.title
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
+import org.bukkit.GameMode
 import org.bukkit.Sound
+import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
@@ -60,6 +62,42 @@ class GameManager(
     fun startGame() {
         setState(GameState.STARTING)
 
+        val scoreboard = Bukkit.getScoreboardManager().mainScoreboard
+        for (player in MultiLib.getAllOnlinePlayers()) {
+
+            // どこかのチームに入っているか確認
+            // 入っていない場合は飛ばす
+            scoreboard.getEntryTeam(player.name) ?: continue
+
+            // インベントリ削除
+            player.inventory.clear()
+            player.inventory.armorContents = emptyArray()
+
+            // ポーション効果削除
+            player.activePotionEffects.forEach {
+                player.removePotionEffect(it.type)
+            }
+
+            // 体力回復(最大体力が多い場合はそれに合わせる)
+            player.health = player.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value ?: 20.0
+
+            // 満腹度回復
+            player.foodLevel = 20
+            player.saturation = 20f
+            player.exhaustion = 0f
+
+            // 火消し
+            player.fireTicks = 0
+
+            // 経験値リセット
+            player.totalExperience = 0
+            player.level = 0
+            player.exp = 0f
+
+            // 落下距離リセット
+            player.fallDistance = 0f
+        }
+
         // 5秒前からのカウントダウン
         countdownTask = object : BukkitRunnable() {
             var seconds = 5
@@ -74,6 +112,7 @@ class GameManager(
                             Duration.ofSeconds(0)
                         ))
                     MultiLib.getAllOnlinePlayers().forEach { player ->
+                        scoreboard.getEntryTeam(player.name) ?: return@forEach
 //                        player.sendMessage("§e試合開始まであと §c$seconds §e秒...")
                         // カウント音 (チッ、チッという音)
                         player.playSound(player.location, Sound.BLOCK_NOTE_BLOCK_HAT, 1f, 1f)
@@ -86,11 +125,15 @@ class GameManager(
                     sendGlobalTitle("§6§l試合開始！", "")
 
                     MultiLib.getAllOnlinePlayers().forEach { player ->
+                        scoreboard.getEntryTeam(player.name) ?: return@forEach
                         // 開始音(オーボエの音などの派手な音)
 //                        player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
                         player.playSound(player.location, Sound.ITEM_GOAT_HORN_SOUND_0, 1f, 1f)
-                    }
 
+                        if (player.scoreboardTags.contains("admin")) return@forEach
+                        // 開始時にサバイバルにする
+                        player.gameMode = GameMode.SURVIVAL
+                    }
 
                     // サイドバー表示
                     playerScoreboardUpdater.start()
@@ -157,8 +200,8 @@ class GameManager(
      * 固定2チームのみ前提の設計
      */
     fun onBossDeath(player: Player) {
-        val board = Bukkit.getScoreboardManager().mainScoreboard
-        val team = board.getEntryTeam(player.name)
+        val scoreboard = Bukkit.getScoreboardManager().mainScoreboard
+        val team = scoreboard.getEntryTeam(player.name)
         val color = team?.color ?: ChatColor.RESET
         var title = "§l";
 
@@ -170,7 +213,10 @@ class GameManager(
 
         sendGlobalTitle(title, "§a§l試合終了！")
         MultiLib.getAllOnlinePlayers().forEach { player ->
+            scoreboard.getEntryTeam(player.name) ?: return@forEach
             player.playSound(player.location, Sound.ITEM_GOAT_HORN_SOUND_5, 1f, 1f)
+            if (player.scoreboardTags.contains("admin")) return@forEach
+            player.gameMode = GameMode.ADVENTURE
         }
 
         stopGame()
