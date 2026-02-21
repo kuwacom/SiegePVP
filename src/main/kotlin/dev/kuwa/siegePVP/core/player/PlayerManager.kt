@@ -6,6 +6,7 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.title.Title
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
+import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.time.Duration
@@ -59,8 +60,8 @@ class PlayerManager(
      * ゲームオーバー時
      */
     private fun onPlayerGameOver(player: Player) {
-        val mainTitle = Component.text("§a§lGAME OVER")
-        val subTitle = Component.text("§7死亡回数が上限に達しました")
+        val mainTitle = Component.text("§c§lGAME OVER")
+        val subTitle = Component.text("§7死亡回数が上限に達しました！")
         val title = Title.title(mainTitle, subTitle, Title.Times.times(
             Duration.ofSeconds(2),
             Duration.ofSeconds(4),
@@ -71,5 +72,7 @@ class PlayerManager(
         player.gameMode = GameMode.SPECTATOR
         player.showTitle(title)
         player.sendMessage(Component.text("§e§lゲームオーバーです！観戦モードに移行しました。"))
+
+        player.playSound(player.location, Sound.ENTITY_GENERIC_EXPLODE, 1f, 1f)
     }
 }
