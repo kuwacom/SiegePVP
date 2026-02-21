@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import com.github.puregero.multilib.MultiLib
 import dev.kuwa.siegePVP.commands.SiegeDevCommand
 import dev.kuwa.siegePVP.commands.SiegePVPCommand
+import dev.kuwa.siegePVP.core.border.BorderManager
 import dev.kuwa.siegePVP.core.game.GameManager
 import dev.kuwa.siegePVP.core.game.GameState
 import dev.kuwa.siegePVP.core.game.GameState.*
@@ -18,6 +19,7 @@ import dev.kuwa.siegePVP.listener.PlayerListener
 class SiegePVP : JavaPlugin() {
     lateinit var manager: PaperCommandManager
 
+    lateinit var borderManager: BorderManager
     lateinit var teamManager: TeamManager
     lateinit var playerManager: PlayerManager
     lateinit var gameManager: GameManager
@@ -33,6 +35,7 @@ class SiegePVP : JavaPlugin() {
         val dataStorage = MultiLib.getDataStorage()
 
         // managers を生成
+        borderManager = BorderManager(this)
         teamManager = TeamManager(this, dataStorage)
         playerManager = PlayerManager(this, dataStorage)
         gameManager = GameManager(this, dataStorage, teamManager, playerManager)
@@ -51,8 +54,8 @@ class SiegePVP : JavaPlugin() {
         manager = PaperCommandManager(this)
 
         // コマンドクラスを登録
-        manager.registerCommand(SiegeDevCommand(this, teamManager, playerManager, gameManager))
-        manager.registerCommand(SiegePVPCommand(this, teamManager, playerManager, gameManager))
+        manager.registerCommand(SiegeDevCommand(this, borderManager, teamManager, playerManager, gameManager))
+        manager.registerCommand(SiegePVPCommand(this, borderManager, teamManager, playerManager, gameManager))
     }
 
     private fun registerListeners() {

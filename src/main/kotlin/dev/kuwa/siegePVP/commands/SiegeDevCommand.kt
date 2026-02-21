@@ -5,6 +5,7 @@ import co.aikar.commands.annotation.*
 import org.bukkit.entity.Player
 import com.github.puregero.multilib.MultiLib
 import dev.kuwa.siegePVP.SiegePVP
+import dev.kuwa.siegePVP.core.border.BorderManager
 import dev.kuwa.siegePVP.core.game.GameManager
 import dev.kuwa.siegePVP.core.player.PlayerManager
 import dev.kuwa.siegePVP.core.team.TeamManager
@@ -15,6 +16,7 @@ import org.bukkit.command.CommandSender
 @Description("SiegePVP 開発用デバッグコマンド")
 class SiegeDevCommand(
     private val plugin: SiegePVP,
+    private val borderManager: BorderManager,
     private val teamManager: TeamManager,
     private val playerManager: PlayerManager,
     private val gameManager: GameManager

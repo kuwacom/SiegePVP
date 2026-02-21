@@ -4,9 +4,11 @@ import co.aikar.commands.BaseCommand
 import co.aikar.commands.annotation.*
 import com.github.puregero.multilib.MultiLib
 import dev.kuwa.siegePVP.SiegePVP
+import dev.kuwa.siegePVP.core.border.BorderManager
 import dev.kuwa.siegePVP.core.game.GameManager
 import dev.kuwa.siegePVP.core.player.PlayerManager
 import dev.kuwa.siegePVP.core.team.TeamManager
+import dev.kuwa.siegePVP.utils.resolveRelativeCoords
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -14,6 +16,7 @@ import org.bukkit.entity.Player
 @CommandAlias("siegepvp|pvp")
 class SiegePVPCommand(
     private val plugin: SiegePVP,
+    private val borderManager: BorderManager,
     private val teamManager: TeamManager,
     private val playerManager: PlayerManager,
     private val gameManager: GameManager
@@ -110,6 +113,64 @@ class SiegePVPCommand(
 
         player.sendMessage("${plugin.PREFIX} §aチーム §r$teamName §aを現在地へtpしスポーン地点を設定しました！")
     }
+
+    @Subcommand("border set")
+    @CommandCompletion("~|<x> ~|<z> <duration> [size]")
+    fun onBorderSet(
+        player: Player,
+        @Name("x") xArg: String,
+        @Name("z") zArg: String,
+        @Name("duration") duration: Int,
+        @Optional @Name("size") size: Double?
+    ) {
+        val world = player.world
+        val borderManager = borderManager
+        val border = world.worldBorder
+
+        // 現在の中心
+        val startX = border.center.x
+        val startZ = border.center.z
+        val startSize = border.size
+
+        // ターゲット座標
+        val (targetX, targetZ) = resolveRelativeCoords(player.location, xArg, zArg)
+
+        // ターゲットサイズ（指定なければ現在のまま）
+        val targetSize = size ?: startSize
+
+        // duration -> ticks
+        val ticks = duration.toLong() * 20L
+
+        // 開始
+        borderManager.start(
+            world,
+            startX,
+            startZ,
+            targetX,
+            targetZ,
+            startSize,
+            targetSize,
+            ticks
+        )
+
+        player.sendMessage(
+            "${plugin.PREFIX} §aワールドボーダーを §r$duration §a秒かけて " +
+                    "§rX:${targetX.toInt()} Z:${targetZ.toInt()} §aへ移動させ、 " +
+                    "§r${targetSize.toInt()} §aのサイズに設定しました！"
+        )
+    }
+
+    @Subcommand("border stop")
+    fun onBorderStop(sender: Player) {
+        if (borderManager.isRunning()) {
+            borderManager.stop()
+            sender.sendMessage("${plugin.PREFIX} §cワールドボーダーの移動を停止しました！")
+        } else {
+            sender.sendMessage("${plugin.PREFIX} §e現在進行中のワールドボーダー移動はありません！")
+        }
+    }
+
+
 
 //    @Subcommand("side on")
 //    fun onSideOn(player: Player) {
