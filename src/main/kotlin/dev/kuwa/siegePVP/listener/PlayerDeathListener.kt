@@ -8,6 +8,8 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.plugin.Plugin
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 
 class PlayerDeathListener(
     private val plugin: Plugin,
@@ -24,6 +26,11 @@ class PlayerDeathListener(
             // adminの場合、ゲームに参加しないようにする
             if (state == GameState.RUNNING &&
                 !player.scoreboardTags.contains("admin")) {
+
+                player.addPotionEffect(
+                    PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 3, 255, false, false)
+                )
+
                 if (player.scoreboardTags.contains("boss")) {
                     // ボスプレイヤー用処理
                     gameManager.onBossDeath(player)
