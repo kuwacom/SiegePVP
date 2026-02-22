@@ -1,6 +1,7 @@
 package dev.kuwa.siegePVP
 
 import co.aikar.commands.PaperCommandManager
+import com.github.puregero.multilib.DataStorageImpl
 import org.bukkit.plugin.java.JavaPlugin
 
 import com.github.puregero.multilib.MultiLib
@@ -24,15 +25,15 @@ class SiegePVP : JavaPlugin() {
     lateinit var playerManager: PlayerManager
     lateinit var gameManager: GameManager
 
+    // storage 準備（MultiLib）
+    val dataStorage: DataStorageImpl = MultiLib.getDataStorage()
+
     val PREFIX = "§8[§bSiegePVP§8]§r"
 
     override fun onEnable() {
         // Plugin startup logic
 
         logger.info("==== SiegePVP ==== Example Enabled!!")
-
-        // storage 準備（MultiLib）
-        val dataStorage = MultiLib.getDataStorage()
 
         // managers を生成
         borderManager = BorderManager(this)
@@ -55,7 +56,7 @@ class SiegePVP : JavaPlugin() {
 
         // コマンドクラスを登録
         manager.registerCommand(SiegeDevCommand(this, borderManager, teamManager, playerManager, gameManager))
-        manager.registerCommand(SiegePVPCommand(this, borderManager, teamManager, playerManager, gameManager))
+        manager.registerCommand(SiegePVPCommand(this, borderManager, teamManager, playerManager, gameManager, dataStorage))
     }
 
     private fun registerListeners() {

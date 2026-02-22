@@ -66,52 +66,28 @@ class GameManager(
 
         val scoreboard = Bukkit.getScoreboardManager().mainScoreboard
         for (player in MultiLib.getAllOnlinePlayers()) {
+            // adminは飛ばす
+            if (player.scoreboardTags.contains("admin")) continue
 
-            // どこかのチームに入っているか確認
-            // 入っていない場合は飛ばす
-            scoreboard.getEntryTeam(player.name) ?: continue
+            // チームに入ってなかったら少ないほうのチームに追加する
+            if (!teamManager.hasTeam(player))
+                teamManager.allocateTeam(player)
 
-            // インベントリ削除
-            player.inventory.clear()
-            player.inventory.armorContents = emptyArray()
+            // デフォルトのゲームモードに変更
+            player.gameMode = GameMode.ADVENTURE
 
-            // ポーション効果削除
-            player.activePotionEffects.forEach {
-                player.removePotionEffect(it.type)
+            // チームのスポーンポイントへtp
+            // スポーンポイントを変更してチームスポーンポイントへtp
+            val team = player.scoreboard.getEntryTeam(player.name)
+            team?.let {
+                teamManager.getTeamSpawnLocation(it.name).thenAcceptAsync( { location ->
+                    player.setBedSpawnLocation(location, true)
+                    location?.let { player.teleport(it) }
+                }, { task -> Bukkit.getScheduler().runTask(plugin, task) })
             }
 
-            // 体力回復(最大体力が多い場合はそれに合わせる)
-            player.health = player.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value ?: 20.0
-
-            // 満腹度回復
-            player.foodLevel = 20
-            player.saturation = 20f
-            player.exhaustion = 0f
-
-            // 火消し
-            player.fireTicks = 0
-
-            // 経験値リセット
-            player.totalExperience = 0
-            player.level = 0
-            player.exp = 0f
-
-            // 落下距離リセット
-            player.fallDistance = 0f
-
-            // パンを16個配布
-            player.inventory.addItem(ItemStack(Material.BREAD, 16))
-
-            // サーバーに登録されているすべての実績をイテレート
-            Bukkit.getServer().advancementIterator().forEachRemaining { advancement ->
-                val progress = player.getAdvancementProgress(advancement)
-
-                // プレイヤーが既に獲得している実績の条件（criteria）を取得し、すべて取り消す
-                val awardedCriteria = progress.awardedCriteria.toList() // ConcurrentModificationExceptionを防ぐためにリスト化
-                for (criterion in awardedCriteria) {
-                    progress.revokeCriteria(criterion)
-                }
-            }
+            // プレイヤーの状態を全てリセット
+            playerManager.resetPlayerState(player)
         }
 
         // 5秒前からのカウントダウン
@@ -128,8 +104,7 @@ class GameManager(
                             Duration.ofSeconds(0)
                         ))
                     MultiLib.getAllOnlinePlayers().forEach { player ->
-                        scoreboard.getEntryTeam(player.name) ?: return@forEach
-//                        player.sendMessage("§e試合開始まであと §c$seconds §e秒...")
+                        player.sendMessage("§e試合開始まであと §c$seconds §e秒...")
                         // カウント音 (チッ、チッという音)
                         player.playSound(player.location, Sound.BLOCK_NOTE_BLOCK_HAT, 1f, 1f)
                     }
@@ -141,11 +116,12 @@ class GameManager(
                     sendGlobalTitle("§6§l試合開始！", "")
 
                     MultiLib.getAllOnlinePlayers().forEach { player ->
-                        scoreboard.getEntryTeam(player.name) ?: return@forEach
+                        player.sendMessage("§6§l試合開始！！")
                         // 開始音(オーボエの音などの派手な音)
 //                        player.playSound(player.location, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
                         player.playSound(player.location, Sound.ITEM_GOAT_HORN_SOUND_0, 1f, 1f)
 
+                        // adminは飛ばす
                         if (player.scoreboardTags.contains("admin")) return@forEach
                         // 開始時にサバイバルにする
                         player.gameMode = GameMode.SURVIVAL
@@ -182,6 +158,15 @@ class GameManager(
      */
     fun stopGame() {
         setState(GameState.ENDED)
+
+        MultiLib.getAllOnlinePlayers().forEach { player ->
+            // adminは飛ばす
+            if (player.scoreboardTags.contains("admin")) return@forEach
+            // 初期ゲームモードに戻す
+            player.gameMode = GameMode.ADVENTURE
+            // プレイヤーのスポーンポイントを消す
+            player.bedSpawnLocation = null
+        }
 
         Bukkit.broadcast(Component.text("§e§lゲームが終了しました！"));
 
@@ -229,11 +214,7 @@ class GameManager(
 
         sendGlobalTitle(title, "§a§l試合終了！")
         MultiLib.getAllOnlinePlayers().forEach { player ->
-            scoreboard.getEntryTeam(player.name) ?: return@forEach
             player.playSound(player.location, Sound.ITEM_GOAT_HORN_SOUND_5, 1f, 1f)
-            player.bedSpawnLocation = null // スポーンポイント削除
-            if (player.scoreboardTags.contains("admin")) return@forEach
-            player.gameMode = GameMode.ADVENTURE
         }
 
         stopGame()
