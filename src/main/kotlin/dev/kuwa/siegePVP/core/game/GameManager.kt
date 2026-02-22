@@ -41,7 +41,7 @@ class GameManager(
     }
 
     fun getState(): CompletableFuture<GameState>? {
-        return dataStorage.get("siege:GameManager/state")
+        return dataStorage.get("siege.GameManager.state")
             ?.thenApply { data ->
                 val state = try {
                     GameState.valueOf(data)
@@ -53,8 +53,8 @@ class GameManager(
     }
 
     private fun setState(state: GameState) {
-        dataStorage.set("siege:GameManager/state", state.name)
-        MultiLib.notify("siege:GameManager/state", state.name)
+        dataStorage.set("siege.GameManager.state", state.name)
+        MultiLib.notify("siege.GameManager.state", state.name)
     }
 
     fun startGame() {
@@ -135,7 +135,7 @@ class GameManager(
     }
 
     /**
-     * ## notify で　`siege:GameManager` `STARTING`を受信した場合
+     * ## notify で　`siege.GameManager` `STARTING`を受信した場合
      * startGame は呼ばれていない前提
      */
     fun onStartGame() {
@@ -173,7 +173,7 @@ class GameManager(
         setState(GameState.WAITING)
     }
     /**
-     * ## notify で　`siege:GameManager` `ENDED`を受信した場合
+     * ## notify で　`siege.GameManager` `ENDED`を受信した場合
      * startGame は呼ばれていない前提
      */
     fun onStopGame() {

@@ -30,15 +30,15 @@ class PlayerManager(
     }
 
     fun resetPlayerDeathCount(uuid: UUID) {
-        dataStorage.set("siege:GameManager/playerDeathCount/$uuid", 0)
+        dataStorage.set("siege.GameManager.playerDeathCount.$uuid", 0)
     }
 
     fun addPlayerDeathCount(uuid: UUID) {
-        dataStorage.add("siege:GameManager/playerDeathCount/$uuid", 1)
+        dataStorage.add("siege.GameManager.playerDeathCount.$uuid", 1)
     }
 
     fun getPlayerDeathCount(uuid: UUID): CompletableFuture<Int>? {
-        return dataStorage.getInt("siege:GameManager/playerDeathCount/$uuid", 0)
+        return dataStorage.getInt("siege.GameManager.playerDeathCount.$uuid", 0)
     }
 
     fun resetPlayerState(player: Player) {

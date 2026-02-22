@@ -79,7 +79,7 @@ class SiegePVP : JavaPlugin() {
          * MultiLib の通知で String を受け取るチャンネルを登録
          */
         // Game の state を取得
-        MultiLib.onString(this, "siege:GameManager/state") { data, _ ->
+        MultiLib.onString(this, "siege.GameManager.state") { data, _ ->
             logger.info("Received match start notification: $data")
             val newState = try {
                 GameState.valueOf(data)
@@ -103,14 +103,14 @@ class SiegePVP : JavaPlugin() {
         /**
          * SiegePVPCommand
          */
-        MultiLib.onString(this, "siege:SiegePVPCommand/config set gameOverDeathCount") { data, _ ->
+        MultiLib.onString(this, "siege.SiegePVPCommand/config set gameOverDeathCount") { data, _ ->
             playerManager.gameOverDeathCount = data.toInt()
         }
-        MultiLib.onString(this, "siege:SiegePVPCommand/config set timer") { data, _ ->
+        MultiLib.onString(this, "siege.SiegePVPCommand/config set timer") { data, _ ->
             gameManager.timer.duration = data.toLong() * 60L
         }
 
-        MultiLib.onString(this, "siege:SiegePVPCommand/sidebar") { data, _ ->
+        MultiLib.onString(this, "siege.SiegePVPCommand/sidebar") { data, _ ->
             if (data == "on") {
                 gameManager.playerScoreboardUpdater.start()
             } else {

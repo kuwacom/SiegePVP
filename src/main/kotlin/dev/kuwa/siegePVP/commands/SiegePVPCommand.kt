@@ -43,7 +43,7 @@ class SiegePVPCommand(
     ) {
         playerManager.gameOverDeathCount = value
         MultiLib.notify(
-            "siege:SiegePVPCommand/config set gameOverDeathCount",
+            "siege.SiegePVPCommand/config set gameOverDeathCount",
             value.toString()
         )
 
@@ -63,7 +63,7 @@ class SiegePVPCommand(
     ) {
         gameManager.timer.duration = minutes * 60L
         MultiLib.notify(
-            "siege:SiegePVPCommand/config set timer",
+            "siege.SiegePVPCommand/config set timer",
             minutes.toString()
         )
 
@@ -178,7 +178,7 @@ class SiegePVPCommand(
             player.sendMessage("${plugin.PREFIX} §eプレイ情報表示を§aON§eにしました！")
 
             MultiLib.notify(
-                "siege:SiegePVPCommand/sidebar",
+                "siege.SiegePVPCommand/sidebar",
                 "on"
             )
         } else {
@@ -186,7 +186,7 @@ class SiegePVPCommand(
             player.sendMessage("${plugin.PREFIX} §eプレイ情報表示を§cOFF§eにしました！")
 
             MultiLib.notify(
-                "siege:SiegePVPCommand/sidebar",
+                "siege.SiegePVPCommand/sidebar",
                 "off"
             )
         }
