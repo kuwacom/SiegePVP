@@ -7,17 +7,13 @@ import dev.kuwa.siegePVP.core.task.Timer
 import dev.kuwa.siegePVP.core.task.PlayerScoreboardUpdater
 import dev.kuwa.siegePVP.core.team.TeamManager
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.title.Title
 import net.kyori.adventure.title.Title.Times
 import net.kyori.adventure.title.Title.title
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.GameMode
-import org.bukkit.Material
 import org.bukkit.Sound
-import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.scheduler.BukkitTask
@@ -64,7 +60,6 @@ class GameManager(
     fun startGame() {
         setState(GameState.STARTING)
 
-        val scoreboard = Bukkit.getScoreboardManager().mainScoreboard
         for (player in MultiLib.getAllOnlinePlayers()) {
             // adminは飛ばす
             if (player.scoreboardTags.contains("admin")) continue
@@ -137,13 +132,8 @@ class GameManager(
             }
         }.runTaskTimer(plugin, 0L, 20L) // 0秒後から開始し、20ティック(1秒)ごとに実行
 
-
-        // 旧
-//        sendGlobalTitle("§6§l試合開始！", "")
-//        playerScoreboardUpdater.start()
-//
-//        setState(GameState.RUNNING)
     }
+
     /**
      * ## notify で　`siege:GameManager` `STARTING`を受信した場合
      * startGame は呼ばれていない前提
@@ -238,7 +228,6 @@ class GameManager(
             times
         )
 
-        // plugin.server.onlinePlayers
         val allPlayers = MultiLib.getAllOnlinePlayers()
         allPlayers.forEach {
             it.showTitle(title)
