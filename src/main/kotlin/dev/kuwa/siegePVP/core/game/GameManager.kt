@@ -231,6 +231,7 @@ class GameManager(
         MultiLib.getAllOnlinePlayers().forEach { player ->
             scoreboard.getEntryTeam(player.name) ?: return@forEach
             player.playSound(player.location, Sound.ITEM_GOAT_HORN_SOUND_5, 1f, 1f)
+            player.bedSpawnLocation = null // スポーンポイント削除
             if (player.scoreboardTags.contains("admin")) return@forEach
             player.gameMode = GameMode.ADVENTURE
         }

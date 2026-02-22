@@ -171,7 +171,6 @@ class SiegePVPCommand(
     }
 
 
-
     @Subcommand("sidebar")
     @CommandCompletion("on|off")
     fun onSidebar(
@@ -195,5 +194,13 @@ class SiegePVPCommand(
                 "off"
             )
         }
+    }
+
+    @Subcommand("reset-spawnpoint all")
+    fun onResetSpawnPointAll(sender: CommandSender) {
+        MultiLib.getAllOnlinePlayers().forEach { player ->
+            player.bedSpawnLocation = null
+        }
+        sender.sendMessage("§aすべてのプレイヤーのスポーン地点を削除しました")
     }
 }

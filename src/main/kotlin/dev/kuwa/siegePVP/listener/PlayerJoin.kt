@@ -31,6 +31,9 @@ class PlayerJoin(
                     // 一般プレイヤー用処理
                     teamManager.allocateTeam(player)
                 }
+            } else {
+//                // ゲーム中じゃなければスポーンポイント削除
+//                player.bedSpawnLocation = null
             }
         }, { task -> Bukkit.getScheduler().runTask(plugin, task) }) // メインスレッドで実行
     }
