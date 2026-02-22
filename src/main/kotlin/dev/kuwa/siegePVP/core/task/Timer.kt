@@ -28,6 +28,7 @@ class Timer(
     fun stop() {
         task?.cancel()
         task = null
+        startMillis = 0L
     }
 
     fun getRemainingSeconds(): Long {
