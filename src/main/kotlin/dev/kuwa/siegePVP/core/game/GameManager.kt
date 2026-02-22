@@ -13,9 +13,11 @@ import net.kyori.adventure.title.Title.title
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.GameMode
+import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.scheduler.BukkitTask
@@ -96,6 +98,20 @@ class GameManager(
 
             // 落下距離リセット
             player.fallDistance = 0f
+
+            // パンを16個配布
+            player.inventory.addItem(ItemStack(Material.BREAD, 16))
+
+            // サーバーに登録されているすべての実績をイテレート
+            Bukkit.getServer().advancementIterator().forEachRemaining { advancement ->
+                val progress = player.getAdvancementProgress(advancement)
+
+                // プレイヤーが既に獲得している実績の条件（criteria）を取得し、すべて取り消す
+                val awardedCriteria = progress.awardedCriteria.toList() // ConcurrentModificationExceptionを防ぐためにリスト化
+                for (criterion in awardedCriteria) {
+                    progress.revokeCriteria(criterion)
+                }
+            }
         }
 
         // 5秒前からのカウントダウン
