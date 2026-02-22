@@ -134,11 +134,11 @@ class TeamManager(
     ): Int {
         if (teamName == null) return 0
 
-        return allPlayers.count { p ->
-            val pTeam = p.scoreboard.getEntryTeam(p.name)?.name
+        return allPlayers.count { player ->
+            val team = player.scoreboard.getEntryTeam(player.name)?.name
 
             // チームが同じ & サバイバルモード
-            pTeam == teamName && p.gameMode == GameMode.SURVIVAL
+            team == teamName && player.gameMode == GameMode.SURVIVAL
         }
     }
 
