@@ -1,6 +1,8 @@
 package dev.kuwa.siegePVP.utils
 
+import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.entity.Item
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -39,4 +41,19 @@ fun resolveRelativeCoords(
     }
 
     return Pair(x, z)
+}
+
+/**
+ * サーバーに落ちているすべてのアイテムを削除
+ */
+fun clearAllDroppedItems() {
+    // 全ワールドを対象にする場合
+    Bukkit.getWorlds().forEach { world ->
+        world.entities.forEach { entity ->
+            // ground に落ちているアイテムだけを削除
+            if (entity is Item) {
+                entity.remove()
+            }
+        }
+    }
 }

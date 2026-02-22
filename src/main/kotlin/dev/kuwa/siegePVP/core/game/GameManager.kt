@@ -6,6 +6,7 @@ import dev.kuwa.siegePVP.core.player.PlayerManager
 import dev.kuwa.siegePVP.core.task.Timer
 import dev.kuwa.siegePVP.core.task.PlayerScoreboardUpdater
 import dev.kuwa.siegePVP.core.team.TeamManager
+import dev.kuwa.siegePVP.utils.clearAllDroppedItems
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.title.Title.Times
 import net.kyori.adventure.title.Title.title
@@ -59,6 +60,7 @@ class GameManager(
 
     fun startGame() {
         setState(GameState.STARTING)
+        clearAllDroppedItems()
 
         for (player in MultiLib.getAllOnlinePlayers()) {
             // adminは飛ばす
