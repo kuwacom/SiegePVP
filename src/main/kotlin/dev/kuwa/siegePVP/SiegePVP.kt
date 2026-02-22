@@ -108,6 +108,14 @@ class SiegePVP : JavaPlugin() {
         MultiLib.onString(this, "siege:SiegePVPCommand/config set timer") { data, _ ->
             gameManager.timer.duration = data.toLong() * 60L
         }
+
+        MultiLib.onString(this, "siege:SiegePVPCommand/sidebar") { data, _ ->
+            if (data == "on") {
+                gameManager.playerScoreboardUpdater.start()
+            } else {
+                gameManager.playerScoreboardUpdater.stop()
+            }
+        }
     }
 
 }

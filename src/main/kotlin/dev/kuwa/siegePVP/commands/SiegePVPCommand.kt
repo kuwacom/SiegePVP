@@ -172,15 +172,28 @@ class SiegePVPCommand(
 
 
 
-//    @Subcommand("side on")
-//    fun onSideOn(player: Player) {
-//        gameManager.playerScoreboardUpdater.start()
-//        player.sendMessage("${plugin.PREFIX} §eプレイ情報表示を§aON§eにしました！")
-//    }
-//
-//    @Subcommand("side off")
-//    fun onSideOff(player: Player) {
-//        gameManager.playerScoreboardUpdater.stop()
-//        player.sendMessage("${plugin.PREFIX} §eプレイ情報表示を§cOFF§eにしました！")
-//    }
+    @Subcommand("sidebar")
+    @CommandCompletion("on|off")
+    fun onSidebar(
+        player: Player,
+        @Values("on|off") mode: String
+    ) {
+        if (mode.equals("on", true)) {
+            gameManager.playerScoreboardUpdater.start()
+            player.sendMessage("${plugin.PREFIX} §eプレイ情報表示を§aON§eにしました！")
+
+            MultiLib.notify(
+                "siege:SiegePVPCommand/sidebar",
+                "on"
+            )
+        } else {
+            gameManager.playerScoreboardUpdater.stop()
+            player.sendMessage("${plugin.PREFIX} §eプレイ情報表示を§cOFF§eにしました！")
+
+            MultiLib.notify(
+                "siege:SiegePVPCommand/sidebar",
+                "off"
+            )
+        }
+    }
 }

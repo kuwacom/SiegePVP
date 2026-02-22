@@ -174,8 +174,8 @@ class GameManager(
 
         // timerの停止
         timer.stop()
-        // サイドバー表示更新の停止及び非表示化
-        playerScoreboardUpdater.stop()
+//        // サイドバー表示更新の停止及び非表示化
+//        playerScoreboardUpdater.stop()
         // 死亡回数カウントのリセット
         playerManager.resetAllPlayerDeathCount()
 
@@ -190,8 +190,8 @@ class GameManager(
 
         // timerの停止
         timer.stop()
-        // サイドバー表示更新の停止及び非表示化
-        playerScoreboardUpdater.stop()
+//        // サイドバー表示更新の停止及び非表示化
+//        playerScoreboardUpdater.stop()
     }
 
 
