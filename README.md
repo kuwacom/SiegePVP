@@ -115,7 +115,8 @@ bash
 3. `/pvp team allocate` チーム割り振り
 
 > ここからは各試合ごとに  
-4. `/pvp team tp <teamName>` でtpとリス地固定
+※ いったん team を remove してからじゃないと、前回の試合で抜けた人が試合中に元から参加していたみたいになるので、試合ごとにcreateしなおすこと
+4. `/pvp team spawnpoint <teamName>` で各チームのスポーンポイント設定
 5. `/pvp start` 開始 5秒カウントダウン始まる
 
 ### チーム参加

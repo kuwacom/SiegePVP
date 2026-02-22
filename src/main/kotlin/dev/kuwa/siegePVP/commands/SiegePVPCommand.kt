@@ -2,6 +2,7 @@ package dev.kuwa.siegePVP.commands
 
 import co.aikar.commands.BaseCommand
 import co.aikar.commands.annotation.*
+import com.github.puregero.multilib.DataStorageImpl
 import com.github.puregero.multilib.MultiLib
 import dev.kuwa.siegePVP.SiegePVP
 import dev.kuwa.siegePVP.core.border.BorderManager
@@ -19,7 +20,8 @@ class SiegePVPCommand(
     private val borderManager: BorderManager,
     private val teamManager: TeamManager,
     private val playerManager: PlayerManager,
-    private val gameManager: GameManager
+    private val gameManager: GameManager,
+    private val dataStorage: DataStorageImpl
 ) : BaseCommand() {
 
     @Subcommand("start")
@@ -92,26 +94,20 @@ class SiegePVPCommand(
 
 
     /**
-     * 各チームの初期tpとリス地設定
+     * 各チームのリス地設定
      */
-    @Subcommand("team tp")
+    @Subcommand("team spawnpoint")
     @Syntax("<teamName>")
-    fun onTeamTP(
+    fun onTeamSpawnPoint(
         player: Player,
         @Name("teamName") teamName: String
     ) {
         val location = player.location
 
-        val scoreboard = Bukkit.getScoreboardManager().mainScoreboard
-        val team = scoreboard.getTeam(teamName) ?: return
+        // チームのスポーン地点の保存
+        teamManager.setTeamSpawnLocation(teamName, location)
 
-        for (entry in team.entries) {
-            val targetPlayer = Bukkit.getPlayerExact(entry) ?: continue
-            targetPlayer.teleport(location)
-            targetPlayer.setBedSpawnLocation(location, true)
-        }
-
-        player.sendMessage("${plugin.PREFIX} §aチーム §r$teamName §aを現在地へtpしスポーン地点を設定しました！")
+        player.sendMessage("${plugin.PREFIX} §aチーム §r$teamName §aのスポーンポイントを設定しました！")
     }
 
     @Subcommand("border set")
@@ -175,7 +171,7 @@ class SiegePVPCommand(
     @CommandCompletion("on|off")
     fun onSidebar(
         player: Player,
-        @Values("on|off") mode: String
+        @Name("mode") mode: String
     ) {
         if (mode.equals("on", true)) {
             gameManager.playerScoreboardUpdater.start()
