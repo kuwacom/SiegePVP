@@ -23,9 +23,8 @@ class PlayerManager(
     var gameOverDeathCount = 4;
 
     fun resetAllPlayerDeathCount() {
-        Bukkit.getOfflinePlayers().forEach { player ->
-            val uuid = player.uniqueId
-            resetPlayerDeathCount(uuid)
+        MultiLib.getAllOnlinePlayers().forEach {
+            resetPlayerDeathCount(it.uniqueId)
         }
     }
 
@@ -42,6 +41,9 @@ class PlayerManager(
     }
 
     fun resetPlayerState(player: Player) {
+        //　死亡回数リセット
+        resetPlayerDeathCount(player.uniqueId)
+
         // インベントリ削除
         player.inventory.clear()
         player.inventory.armorContents = emptyArray()

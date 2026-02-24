@@ -84,7 +84,7 @@ class SiegeDevCommand(
     @Subcommand("player resetall")
     @Description("全プレイヤーの死亡回数をリセットします")
     fun onResetAll(sender: Player) {
-        plugin.server.onlinePlayers.forEach {
+        MultiLib.getAllOnlinePlayers().forEach {
             playerManager.resetPlayerDeathCount(it.uniqueId)
         }
         sender.sendMessage("${plugin.PREFIX}§a全プレイヤーの死亡回数をリセットしました")
